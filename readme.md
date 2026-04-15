@@ -1,107 +1,92 @@
-# 📘 Simple AI Study Helper
+# AI Study Helper
 
-A beginner-friendly EDTech mini project that uses AI to explain topics, generate key points, and create quiz questions.
+Simple Streamlit app for learning a topic quickly.
+It combines web context from Serper + LLM output from Groq, then validates the response with Pydantic.
 
----
+## Features
 
-## 🚀 Features
+- Topic explanation in simple language
+- Key points summary
+- Quiz question generation
+- Serper context enrichment (top 2 search snippets)
+- Pydantic schema validation for predictable output
+- Groq model fallback if a model is decommissioned
 
-* 🔍 Fetches real-time data using Serper API
-* 🤖 Generates explanations using Groq AI
-* ✅ Validates output using Pydantic
-* 🎯 Simple and clean Streamlit UI
+## Quick Start
 
----
+1. Install dependencies:
 
-## 🧠 How It Works
-
-1. User enters a topic
-2. App fetches short search data (Serper)
-3. Sends data to AI (Groq)
-4. AI returns structured response
-5. Pydantic validates the response
-6. Results are displayed on screen
-
----
-
-## 🛠️ Tech Stack
-
-* Python
-* Streamlit
-* Pydantic
-* Groq API
-* Serper API
-
----
-
-## 📁 Project Structure
-
-```
-project/
-│── app.py
-│── .env
-│── requirements.txt
-```
-
----
-
-## 🔐 Setup Instructions
-
-### 1. Clone / Download Project
-
-### 2. Install Dependencies
-
-```
+```bash
 pip install -r requirements.txt
 ```
 
-### 3. Add API Keys
+2. Create a .env file in the project root:
 
-Create a `.env` file:
-
+```env
+GROQ_API_KEY=your_groq_key
+SERPER_API_KEY=your_serper_key
+# Optional: override default model
+GROQ_MODEL=llama-3.3-70b-versatile
 ```
-GROQ_API_KEY=your_key_here
-SERPER_API_KEY=your_key_here
-```
 
----
+3. Run the app:
 
-## ▶️ Run the App
-
-```
+```bash
 streamlit run app.py
 ```
 
----
+## Configuration
 
-## 💡 Usage
+- Required:
+  - GROQ_API_KEY
+  - SERPER_API_KEY
+- Optional:
+  - GROQ_MODEL
 
-* Enter any topic (e.g., "Photosynthesis")
-* Click **Generate**
-* Get:
+If GROQ_MODEL is not set, the app uses llama-3.3-70b-versatile.
+If the selected model is unavailable/decommissioned, the app automatically tries fallback models.
 
-  * Explanation
-  * Key Points
-  * Quiz Questions
+## How It Works
 
----
+1. User enters a topic in Streamlit.
+2. App fetches related context from Serper.
+3. App sends a prompt to Groq requesting JSON output.
+4. App parses JSON (including fenced JSON responses).
+5. Pydantic validates output format.
+6. UI displays explanation, key points, and quiz questions.
 
-## 🎓 Learning Outcome
+## Project Structure
 
-This project demonstrates:
+```text
+.
+|- app.py
+|- requirements.txt
+|- readme.md
+|- .env (create locally)
+```
 
-* AI integration in education
-* Real-time search usage
-* Data validation using Pydantic
-* Basic web app development
+## Troubleshooting
 
----
+- Error: model_decommissioned
+  - Set GROQ_MODEL in .env to a currently supported Groq model.
+  - The app already retries with fallback models automatically.
 
-## 📌 Note
+- Error: 401 / invalid API key
+  - Recheck GROQ_API_KEY and SERPER_API_KEY values.
 
-* Keep API keys private
-* If error occurs, try again (AI response may vary)
+- Error parsing AI response
+  - Retry once. The app expects strict JSON and validates it.
 
----
+- Serper request failed
+  - Confirm SERPER_API_KEY is valid and has quota.
+
+## Tech Stack
+
+- Python
+- Streamlit
+- Requests
+- Groq SDK
+- Pydantic
+- python-dotenv
 
 
